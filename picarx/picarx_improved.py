@@ -4,6 +4,7 @@ from robot_hat import Pin, ADC, PWM, Servo, fileDB
 from robot_hat import Grayscale_Module, Ultrasonic, utils
 import time
 import os
+import math
 
 
 logging_format = "%(asctime)s: %(message)s"
@@ -120,8 +121,8 @@ class Picarx(object):
             direction = -1 * self.cali_dir_value[motor]
         speed = abs(speed)
         # print(f"direction: {direction}, speed: {speed}")
-        if speed != 0:
-            speed = int(speed /2 ) + 50
+        # if speed != 0:
+        #     speed = int(speed /2 ) + 50
         speed = speed - self.cali_speed_value[motor]
         if direction < 0:
             self.motor_direction_pins[motor].high()
@@ -204,23 +205,21 @@ class Picarx(object):
             self.set_motor_speed(1, -1*speed)
             self.set_motor_speed(2, speed)  
 
-    def forward(self, speed):
+    def calculate_wheel_speeds(self, base_speed, angle):
+        angle_rad = math.radians(angle)
+        speed_modifier = math.sin(angle_rad)
+
+        left_speed = base_speed * (1 - speed_modifier)
+        right_speed = base_speed * (1 + speed_modifier)
+
+        return left_speed, right_speed
+    
+    def forward(self, speed ):
         current_angle = self.dir_current_angle
-        logging.debug(f"Current angle: {current_angle}")
-        if current_angle != 0:
-            abs_current_angle = abs(current_angle)
-            if abs_current_angle > self.DIR_MAX:
-                abs_current_angle = self.DIR_MAX
-            power_scale = (100 - abs_current_angle) / 100.0
-            if (current_angle / abs_current_angle) > 0:
-                self.set_motor_speed(1, 1*speed * power_scale)
-                self.set_motor_speed(2, -speed) 
-            else:
-                self.set_motor_speed(1, speed)
-                self.set_motor_speed(2, -1*speed * power_scale)
-        else:
-            self.set_motor_speed(1, speed)
-            self.set_motor_speed(2, -1*speed)                  
+        left_speed, right_speed = self.calculate_wheel_speeds(speed, current_angle)
+
+        self.set_motor_speed(1, left_speed)
+        self.set_motor_speed(2, -right_speed)
 
     def stop(self):
         '''

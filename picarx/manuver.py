@@ -9,9 +9,9 @@ def move_forward(px, speed, duration):
     Move the car forward at the given speed for the specified duration.
     """
     print(f"Moving forward with speed {speed}")
-    px.set_dir_servo_angle(-30)
+    px.set_dir_servo_angle(0)
     px.forward(speed)
-    time.sleep(20)
+    time.sleep(1)
     px.stop()
 
 def move_backward(px, speed, duration):

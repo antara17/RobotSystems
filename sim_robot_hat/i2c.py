@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from .basic import _Basic_class
 from .utils import run_command
-from smbus2 import SMBus
+# from smbus2 import SMBus
 import multiprocessing
 
 
@@ -39,7 +39,7 @@ class I2C(_Basic_class):
         """
         super().__init__(*args, **kwargs)
         self._bus = bus
-        self._smbus = SMBus(self._bus)
+        self._smbus = None
         if isinstance(address, list):
             connected_devices = self.scan()
             for _addr in address:

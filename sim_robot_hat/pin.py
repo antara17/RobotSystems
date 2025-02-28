@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from .basic import _Basic_class
-import gpiozero  # https://gpiozero.readthedocs.io/en/latest/installing.html
-from gpiozero import OutputDevice, InputDevice, Button
+# import gpiozero  # https://gpiozero.readthedocs.io/en/latest/installing.html
+# from gpiozero import OutputDevice, InputDevice, Button
 
 
 class Pin(_Basic_class):
@@ -124,13 +124,13 @@ class Pin(_Basic_class):
             if self.gpio.pin != None:
                 self.gpio.close()
         #
-        if mode in [None, self.OUT]:
-            self.gpio = OutputDevice(self._pin_num)
-        else:
-            if pull in [self.PULL_UP]:
-                self.gpio = InputDevice(self._pin_num, pull_up=True)
-            else:
-                self.gpio = InputDevice(self._pin_num, pull_up=False)
+        # if mode in [None, self.OUT]:
+        #     self.gpio = OutputDevice(self._pin_num)
+        # else:
+        #     if pull in [self.PULL_UP]:
+        #         self.gpio = InputDevice(self._pin_num, pull_up=True)
+        #     else:
+        #         self.gpio = InputDevice(self._pin_num, pull_up=False)
 
     def dict(self, _dict=None):
         """
